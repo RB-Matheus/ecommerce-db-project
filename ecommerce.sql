@@ -1,6 +1,64 @@
+create table contas(
+    id_conta bigint primary key auto_increment,
+    id_usuario bigint,
+    data_criacao timestamp default current_timestamp(),
+    foreign key(id_usuario) references usuarios(id_usuario)
+);
+
+-- Vai generalizar funcionários, fornecedores e clientes
+create table usuarios(
+    id_usuario bigint primary key auto_increment,
+    apelido varchar(50) unique,
+    status_usuario enum('online', 'offline') default 'offline'
+);
+
+create table funcionarios(
+    id_funcionario bigint primary key auto_increment,
+    cpf varchar(11) not null unique,
+    nome varchar(50) not null,
+    sobrenome varchar(100) not null,
+    idade int not null,
+    id_cargo bigint,
+    id_departamento bigint,
+    foreign key(id_cargo) references cargos(id_cargo),
+    foreign key(id_departamento) references departamentos(id_departamento),
+    foreign key(id_funcionario) references usuarios(id_usuario)
+);
+
+create table fornecedores(
+    id_fornecedor bigint primary key auto_increment,
+    cnpj varchar(14) unique not null,
+    razao_social varchar(255) not null,
+    foreign key(id_fornecedor) references usuarios(id_usuario)
+);
+
+create table clientes(
+    id_cliente bigint primary key auto_increment,
+    nome varchar(50) not null,
+    sobrenome varchar(100) not null,
+    id_wishlist bigint,
+    foreign key(id_wishlist) references wishlists(id_wishlist),
+    foreign key(id_cliente) references usuarios(id_usuario)
+);
+
+create table departamentos(
+    id_departamento bigint primary key auto_increment,
+    nome varchar(255) not null,
+    sigla varchar(10) not null
+);
+
+create table cargos(
+    id_cargo bigint primary key auto_increment,
+    nome varchar(100) not null,
+    salario decimal(20,2) not null,
+    atribuicoes varchar(255) not null
+);
+
 create table emails(
 	id_email bigint primary key auto_increment,
-    email varchar(255)
+    id_usuario bigint,
+    email varchar(100),
+    foreign key(id_usuario) references usuarios(id_usuario)
 );
 
 
