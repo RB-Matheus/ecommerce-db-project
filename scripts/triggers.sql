@@ -1,4 +1,3 @@
-
 -- notificando os clientes que possuem o produto na wishlist
 delimiter $$
 create trigger notificar_promocao after insert
@@ -24,5 +23,3 @@ begin
     close cursor_promocoes;
 end $$
 delimiter ;
-
-

@@ -1,3 +1,7 @@
+-- veículos aula
+-- auditorias
+-- triggers e chamar arquivo
+
 create table contas(
     id_conta bigint primary key auto_increment,
     id_usuario bigint,
