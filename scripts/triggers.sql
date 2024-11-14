@@ -23,3 +23,16 @@ begin
     close cursor_promocoes;
 end $$
 delimiter ;
+
+-- audita aumentos de salários da empresa
+delimiter $$
+create trigger auditar_salario
+after update on funcionarios
+for each row
+begin
+    if (new.salario > old.salario) then
+        insert into auditoria_salarios (id_funcionario, salario_antigo, salario_novo)
+        values (old.id_funcionario, old.salario, new.salario);
+    end if;
+end $$
+delimiter ;
