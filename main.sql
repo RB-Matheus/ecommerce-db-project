@@ -25,9 +25,10 @@ create table funcionarios(
     idade int not null,
     id_cargo bigint,
     id_departamento bigint,
+    salario decimal(20,2) not null
     -- foreign key(id_cargo) references cargos(id_cargo),
     -- foreign key(id_departamento) references departamentos(id_departamento),
-	foreign key(id_funcionario) references usuarios(id_usuario)
+	-- foreign key(id_funcionario) references usuarios(id_usuario)
 );
 
 create table fornecedores(
@@ -55,7 +56,6 @@ create table departamentos(
 create table cargos(
     id_cargo bigint primary key auto_increment,
     nome varchar(100) not null,
-    salario decimal(20,2) not null,
     atribuicoes varchar(255) not null
 );
 
@@ -202,6 +202,15 @@ create table pagamentos(
     foreign key(id_fornecedor) references fornecedores(id_fornecedor)
 );
 
+create table auditoria_salarios(
+  id_auditoria bigint primary key auto_increment,
+  id_funcionario bigint not null,
+  salario_antigo decimal(20,2) not null,
+  salario_novo decimal(20,2) not null,
+  data_alteracao timestamp default current_timestamp(),
+  foreign key(id_funcionario) references funcionarios(id_funcionario)
+);
+
 create table compras(
 	id_compra bigint auto_increment primary key,
     id_produto bigint,
@@ -310,3 +319,8 @@ foreign key (id_produto) references produtos(id_produto);
 alter table produtos
 add constraint fk_produtos_categorias_produtos
 foreign key (id_categoria) references categorias_produto(id_categoria);
+
+
+-- set foreign_key_checks = 0;
+-- drop table funcionarios;
+-- set foreign_key_checks = 1;
