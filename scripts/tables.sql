@@ -1,20 +1,15 @@
-create database if not exists ecommerce;
-use ecommerce;
--- drop database ecommerce;
-
+create table contas(
+    id_conta bigint primary key auto_increment,
+    id_usuario bigint,
+    data_criacao timestamp default current_timestamp(),
+    foreign key(id_usuario) references usuarios(id_usuario)
+);
 
 -- Vai generalizar funcionários, fornecedores e clientes
 create table usuarios(
     id_usuario bigint primary key auto_increment,
     apelido varchar(50) unique,
     status_usuario enum('online', 'offline') default 'offline'
-);
-
-create table contas(
-    id_conta bigint primary key auto_increment,
-    id_usuario bigint,
-    data_criacao timestamp default current_timestamp(),
-    foreign key(id_usuario) references usuarios(id_usuario)
 );
 
 create table funcionarios(
@@ -25,10 +20,9 @@ create table funcionarios(
     idade int not null,
     id_cargo bigint,
     id_departamento bigint,
-    salario decimal(20,2) not null
-    -- foreign key(id_cargo) references cargos(id_cargo),
-    -- foreign key(id_departamento) references departamentos(id_departamento),
-	-- foreign key(id_funcionario) references usuarios(id_usuario)
+    foreign key(id_cargo) references cargos(id_cargo),
+    foreign key(id_departamento) references departamentos(id_departamento),
+    foreign key(id_funcionario) references usuarios(id_usuario)
 );
 
 create table fornecedores(
@@ -43,7 +37,7 @@ create table clientes(
     nome varchar(50) not null,
     sobrenome varchar(100) not null,
     id_wishlist bigint,
-    -- foreign key(id_wishlist) references wishlist(id_wishlist),
+    foreign key(id_wishlist) references wishlists(id_wishlist),
     foreign key(id_cliente) references usuarios(id_usuario)
 );
 
@@ -56,6 +50,7 @@ create table departamentos(
 create table cargos(
     id_cargo bigint primary key auto_increment,
     nome varchar(100) not null,
+    salario decimal(20,2) not null,
     atribuicoes varchar(255) not null
 );
 
@@ -66,71 +61,70 @@ create table emails(
     foreign key(id_usuario) references usuarios(id_usuario)
 );
 
+
 create table vendas(
-	id_venda bigint primary key auto_increment,
-    id_cliente bigint,
-    id_produto bigint,
+	id_venda int primary key auto_increment,
+    id_cliente int,
+    id_produto int,
     quantidade int,
     data_venda timestamp default now(),
     status_pagamento varchar(50),
-    foreign key(id_cliente) references clientes(id_cliente)
-    -- foreign key(id_produto) references produtos(id_produto)
+    foreign key(id_cliente) references clientes(id_cliente),
+    foreign key(id_produto) references produtos(id_produto)
 );
 
 create table pedidos(
-	id_pedido bigint primary key auto_increment,
-    id_cliente bigint,
+	id_pedido int primary key auto_increment,
+    id_cliente int,
     data_pedido timestamp default now(), 
     status_pedido varchar(50),
-    id_frete bigint,
-    foreign key(id_cliente) references clientes(id_cliente)
-    -- foreign key(id_frete) references fretes(id_frete)
+    id_frete int,
+    foreign key(id_cliente) references clientes(id_cliente),
+    foreign key(id_frete) references fretes(id_frete)
 );
-
 create table itens_pedido(
-    id_pedido bigint,
-    id_produto bigint,
+    id_pedido int,
+    id_produto int,
     quantidade int not null,
-    foreign key(id_pedido) references pedidos(id_pedido)
-    -- foreign key(id_produto) references produtos(id_produto)
+    foreign key(id_pedido) references pedidos(id_pedido),
+    foreign key(id_produto) references produtos(id_produto)
 );
 
 create table fretes(
-	id_frete bigint primary key auto_increment,
+	id_frete int primary key auto_increment,
     cidade_partida varchar(100),
     cidade_destino varchar(100),
     previsao_dias int,
     tipo_veiculo varchar(100),
-    id_pedido bigint,
+    id_pedido int,
     foreign key(id_pedido) references pedidos(id_pedido)
 );
 
 create table estoque(
-	id_estoque bigint primary key auto_increment,
-    id_produto bigint,
-    quantidade int not null
-    -- foreign key(id_produto) references produtos(id_produto)
+	id_estoque int primary key auto_increment,
+    id_produto int,
+    quantidade int not null,
+    foreign key(id_produto) references produtos(id_produto)
 );
 
 create table produtos(
-	id_produto bigint primary key auto_increment,
+	id_produto int primary key auto_increment,
     nome varchar(200) not null,
-	id_categoria bigint,
+	id_categoria int,
     preco decimal(20,2),
     descricao varchar(255),
     peso float not null,
-    volume varchar(100)
-    -- foreign key(id_categoria) references categorias_produto(id_categoria)
+    volume varchar(100),
+    foreign key(id_categoria) references categorias_produto(id_categoria)
 );
 
 create table categorias_produto(
-	id_categoria bigint primary key auto_increment,
+	id_categoria int primary key auto_increment,
     nome varchar(255)
 );
-
 create table promocoes(
 	id_promocao bigint primary key auto_increment,
-	id_produto bigint,
+	id_produto int,
     desconto float,
     data_inicio date not null,
     data_fim date,
@@ -141,7 +135,6 @@ create table carrinhos(
     id_cliente bigint,
     foreign key(id_cliente) references clientes(id_cliente)
 );
-
 create table carrinho_itens( -- pendente
     id_carrinho bigint,
     id_produto bigint,
@@ -186,7 +179,7 @@ create table tickets(
     id_funcionario bigint,
     assunto varchar(255),
     descricao varchar(255),
-    foreign key(id_cliente) references clientes(id_cliente),
+    foreign key(id_pedido) references pedidos(id_pedido),
     foreign key(id_funcionario) references funcionarios(id_funcionario)
 );
 
@@ -200,15 +193,6 @@ create table pagamentos(
     foreign key(id_pedido) references pedidos(id_pedido),
     foreign key(id_funcionario) references funcionarios(id_funcionario),
     foreign key(id_fornecedor) references fornecedores(id_fornecedor)
-);
-
-create table auditoria_salarios(
-  id_auditoria bigint primary key auto_increment,
-  id_funcionario bigint not null,
-  salario_antigo decimal(20,2) not null,
-  salario_novo decimal(20,2) not null,
-  data_alteracao timestamp default current_timestamp(),
-  foreign key(id_funcionario) references funcionarios(id_funcionario)
 );
 
 create table compras(
@@ -233,7 +217,7 @@ create table historico_compras(
     id_pedido bigint,
     data_comentario timestamp default now(),
     foreign key(id_cliente) references clientes(id_cliente),
-    foreign key(id_pedido) references pedidos(id_pedido)
+    foreign key(id_pedido) references pedidos(id_pedidos)
 );
 
 create table comentarios(
@@ -287,40 +271,3 @@ create table contratos_fornecedor(
 	data_fim date not null,
     valor_contrato decimal(65,2)
 );
-
-alter table funcionarios
-add constraint fk_funcionarios_cargos
-foreign key (id_cargo) references cargos(id_cargo);
-
-alter table funcionarios
-add constraint fk_funcionarios_departamentos
-foreign key (id_departamento) references departamentos(id_departamento);
-
-alter table clientes
-add constraint fk_clientes_wishlist
-foreign key (id_wishlist) references wishlist(id_wishlist);
-
-alter table vendas
-add constraint fk_vendas_produtos
-foreign key (id_produto) references produtos(id_produto);
-
-alter table pedidos
-add constraint fk_pedidos_fretes
-foreign key (id_frete) references fretes(id_frete);
-
-alter table itens_pedido
-add constraint fk_itens_pedido_produtos
-foreign key (id_produto) references produtos (id_produto);
-
-alter table estoque
-add constraint fk_estoque_produtos
-foreign key (id_produto) references produtos(id_produto);
-
-alter table produtos
-add constraint fk_produtos_categorias_produtos
-foreign key (id_categoria) references categorias_produto(id_categoria);
-
-
--- set foreign_key_checks = 0;
--- drop table funcionarios;
--- set foreign_key_checks = 1;
