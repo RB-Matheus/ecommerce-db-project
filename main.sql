@@ -105,20 +105,25 @@ create table fretes(
     foreign key(id_pedido) references pedidos(id_pedido)
 );
 
-create table estoque(
-	id_estoque bigint primary key auto_increment,
-    id_produto bigint,
-    quantidade int not null
-    -- foreign key(id_produto) references produtos(id_produto)
-);
-
 create table produtos(
 	id_produto bigint primary key auto_increment,
-    nome varchar(200) not null,
-	id_categoria bigint,
-    preco decimal(20,2),
+    nome varchar(200) not null unique,
+	id_categoria bigint not null,
+    preco decimal(20,2) not null,
+    quantidade bigint not null,
     descricao varchar(255)
     -- foreign key(id_categoria) references categorias_produto(id_categoria)
+);
+
+create table movimentacoes_estoque(
+  id_movimentacao bigint primary key auto_increment,
+  id_produto bigint not null,
+  preco_antes decimal(20,2) not null,
+  preco_depois decimal(20,2) not null,
+  qtd_antes bigint not null,
+  qtd_depois bigint not null,
+  data_movimentacao timestamp default current_timestamp(),
+  foreign key(id_produto) references produtos(id_produto)
 );
 
 create table categorias_produto(
@@ -318,7 +323,6 @@ alter table produtos
 add constraint fk_produtos_categorias_produtos
 foreign key (id_categoria) references categorias_produto(id_categoria);
 
-
 -- set foreign_key_checks = 0;
--- drop table funcionarios;
+-- drop table produtos;
 -- set foreign_key_checks = 1;
