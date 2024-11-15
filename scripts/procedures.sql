@@ -8,3 +8,19 @@ begin
 
 end $$
 delimiter ;
+
+delimiter $$
+create procedure aumentar_estoque(in p_id_produto bigint, in p_quantidade bigint)
+begin
+	update estoque set quantidade = quantidade + quantidade where id_produto = p_id_produto;
+end $$
+delimiter ;
+
+delimiter $$
+create procedure ajustar_preco(in p_id_produto bigint, in p_preco bigint)
+begin
+	update produtos set preco = p_preco where id_produto = p_id_produto;
+end $$
+delimiter ;
+
+-- daria pra fazer outras procedures neste modelo ai
