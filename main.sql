@@ -139,6 +139,7 @@ create table promocoes(
     data_fim date,
     foreign key(id_produto) references produtos(id_produto)
 );
+
 create table carrinhos(
 	id_carrinho bigint primary key auto_increment,
     id_cliente bigint,
