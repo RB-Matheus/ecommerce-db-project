@@ -117,9 +117,7 @@ create table produtos(
     nome varchar(200) not null,
 	id_categoria bigint,
     preco decimal(20,2),
-    descricao varchar(255),
-    peso float not null,
-    volume varchar(100)
+    descricao varchar(255)
     -- foreign key(id_categoria) references categorias_produto(id_categoria)
 );
 
