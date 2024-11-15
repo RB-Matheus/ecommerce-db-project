@@ -23,6 +23,7 @@ create table funcionarios(
     nome varchar(50) not null,
     sobrenome varchar(100) not null,
     idade int not null,
+    sexo varchar(1) not null,
     id_cargo bigint,
     id_departamento bigint,
     salario decimal(20,2) not null
@@ -107,7 +108,7 @@ create table fretes(
 
 create table produtos(
 	id_produto bigint primary key auto_increment,
-    nome varchar(200) not null unique,
+    nome varchar(200) not null,
 	id_categoria bigint not null,
     preco decimal(20,2) not null,
     quantidade bigint not null,
@@ -327,3 +328,14 @@ foreign key (id_categoria) references categorias_produto(id_categoria);
 -- set foreign_key_checks = 0;
 -- drop table produtos;
 -- set foreign_key_checks = 1;
+
+-- show index from produtos;
+-- explain select * from produtos where nome = 'Suco de Laranja';
+-- create index idx_nome_produto on produtos(nome);
+
+-- explain select * from enderecos where cep = '2121';
+-- create index idx_cep on enderecos(cep);
+
+-- create index idx_tipo_atvd on historico_atividades(tipo_atividade);
+-- explain select * from historico_atividades where tipo_atividade = 'Criação de promoção';
+
