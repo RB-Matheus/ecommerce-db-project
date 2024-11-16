@@ -30,6 +30,12 @@ create table funcionarios(
     -- foreign key(id_cargo) references cargos(id_cargo),
     -- foreign key(id_departamento) references departamentos(id_departamento),
 	-- foreign key(id_funcionario) references usuarios(id_usuario)
+)
+partition by range (idade) (
+    partition p1 values less than (30),
+    partition p2 values less than (50),
+    partition p3 values less than (65),
+    partition p4 values less than maxvalue
 );
 
 create table fornecedores(
