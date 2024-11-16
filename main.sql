@@ -348,3 +348,5 @@ foreign key (id_categoria) references categorias_produto(id_categoria);
 
 -- select * from vw_tickets_abertos;
 -- select status_ticket from tickets;
+
+-- show triggers from ecommerce like '%';
