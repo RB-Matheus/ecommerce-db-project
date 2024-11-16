@@ -53,3 +53,20 @@ begin
     
 end $$
 delimiter ;
+
+-- audita movimentações de atualizações de produtos
+delimiter $$
+create trigger auditar_movimentacao_produto
+after update on produtos
+for each row
+begin
+
+	if validar_movimentacao_produto(new.id_categoria, new.preco, new.quantidade) THEN
+		insert into movimentacoes_estoque (id_produto, preco_antes, preco_depois, qtd_antes, qtd_depois, data_movimentacao) values 
+		(new.id_produto, old.preco, new.preco, old.quantidade, new.quantidade, current_timestamp());
+    else 
+        signal sqlstate '45000' set message_text = 'Produto com especificações inválidas. Certifique-se de revisar os campos informados.';
+    end if;
+    
+end $$
+delimiter ;

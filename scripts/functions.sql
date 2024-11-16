@@ -1,6 +1,6 @@
--- valida um produto (usado antes de efetivamente inseri-lo no banco de dados)
+-- valida as movimentações de produto no estoque
 delimiter $$
-create function validar_cadastro_produto(p_id_categoria bigint, p_preco bigint, p_quantidade bigint)
+create function validar_movimentacao_produto(p_id_categoria bigint, p_preco bigint, p_quantidade bigint)
 returns boolean
 deterministic
 begin
