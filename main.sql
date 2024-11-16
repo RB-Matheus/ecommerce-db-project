@@ -163,8 +163,8 @@ create table carrinho_itens( -- pendente
 
 create table wishlist(
 	id_wishlist bigint primary key auto_increment,
-    id_cliente bigint,
-    foreign key(id_cliente) references clientes(id_cliente)
+    data_criacao timestamp default current_timestamp(),
+    data_atualizacao timestamp default null
 );
 
 create table wishlist_itens( -- pendente
@@ -197,6 +197,7 @@ create table tickets(
     id_funcionario bigint,
     assunto varchar(255),
     descricao varchar(255),
+    status_ticket varchar(15),
     foreign key(id_cliente) references clientes(id_cliente),
     foreign key(id_funcionario) references funcionarios(id_funcionario)
 );
@@ -332,7 +333,7 @@ add constraint fk_produtos_categorias_produtos
 foreign key (id_categoria) references categorias_produto(id_categoria);
 
 -- set foreign_key_checks = 0;
--- drop table produtos;
+-- drop table wishlist;
 -- set foreign_key_checks = 1;
 
 -- show index from produtos;
@@ -345,3 +346,5 @@ foreign key (id_categoria) references categorias_produto(id_categoria);
 -- create index idx_tipo_atvd on historico_atividades(tipo_atividade);
 -- explain select * from historico_atividades where tipo_atividade = 'Criação de promoção';
 
+-- select * from vw_tickets_abertos;
+-- select status_ticket from tickets;
